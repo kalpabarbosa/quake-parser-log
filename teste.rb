@@ -14,7 +14,4 @@ class QuakeLog
 end
 
 log = QuakeLog.new("../documentacao/games.log")
-log.nextLine
-log.nextLine
-log.nextLine
-log.nextLine
+
