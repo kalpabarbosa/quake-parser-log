@@ -3,15 +3,23 @@
 class QuakeLog
 
 	def initialize(arquivo)
-		@index = 0
 		@arq = File.readlines(arquivo)
+		@num_of_games = 0
 	end
 
-	def nextLine
-		puts @arq.at(@index)
-		@index += 1
+	def getGame		
+		@arq.each do |line|
+			if line.include? 'InitGame'
+				#starts the game
+				@num_of_games += 1
+			else
+				#
+			end
+		end
+		puts @num_of_games
 	end
+
 end
 
-log = QuakeLog.new("../documentacao/games.log")
-
+log = QuakeLog.new('../documentacao/games.log')
+log.getGame
