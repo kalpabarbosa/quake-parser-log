@@ -19,10 +19,6 @@ class Game
 		@kills[player_nickname] = 0
 	end
 
-	def getPlayer(player_id)
-		@players[player_id]
-	end
-
 	def pushKill(killer)
 		if killer.nil?
 		else

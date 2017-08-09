@@ -10,6 +10,7 @@ class QuakeLog
 		@arq = File.readlines(arquivo)
 		@game_num = 0 # qtd de jogos
 		@games = Array.new
+		@ranking = Hash.new
 	end
 
 	def getGames
@@ -51,10 +52,27 @@ class QuakeLog
 		end
 	end
 
+	def makeRanking
+		@games.each do |game|
+			game.players.each do |kills, player|
+				if @ranking.include?(player)
+					@ranking[player] = @ranking.fetch(player).to_i + kills.to_i
+				else
+					@ranking[player] = kills.to_i
+				end
+
+			end
+		end
+		@ranking = @ranking.sort_by {|k, v| v}.reverse
+		print "\n### Ranking ###\n\n"
+		@ranking.each do |player, kills|
+			puts player.ljust(20) + kills.to_s
+		end
+	end
+
 end
 
-log = QuakeLog.new('../documentacao/games.log')
+log = QuakeLog.new('games.log')
 log.getGames
-log.printGames
-
-
+log.printGames #Task 2
+log.makeRanking #Task 2
