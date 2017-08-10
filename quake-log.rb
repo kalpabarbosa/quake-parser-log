@@ -16,26 +16,31 @@ class QuakeLog
 	def getGames
 		@arq.each do |line|
 
+			game = @games[@game_num-1]
+
 			if line.include? 'InitGame'
-				newGame # inicia novo jogo
+				newGame; next # inicia novo jogo
 			end
 
 			if line.include? 'ClientUserinfoChanged'
 				id = line.split(' ')[2]
 				nome = line.split('\\')[1]
-				@games[@game_num-1].pushPlayer(id, nome);
+				game.pushPlayer(id, nome);
+				next
 			end
 
 			if line.include? 'Kill'
-				@games[@game_num-1].total_kills += 1
-				killer = line.split(' ')[2]
-				killed = line.split(' ')[3]
-				#weapon = line.split(' ')[4]
+				game.total_kills += 1
+				l = line.split(' ')
+				killer = l[2]
+				killed = l[3]
+				death_reason = l[4]
+				game.deathLog(death_reason)
 
 				if killer.to_i == WORLD
-					@games[@game_num-1].pullKill(@games[@game_num-1].players[killed])
+					game.pullKill(game.players[killed])
 				else
-					@games[@game_num-1].pushKill(@games[@game_num-1].players[killer])
+					game.pushKill(game.players[killer])
 				end
 			end
 		end
@@ -70,9 +75,16 @@ class QuakeLog
 		end
 	end
 
+	def deathReport
+		@games.each do |game|
+			game.printDeathReport
+		end
+	end
+
 end
 
 log = QuakeLog.new('games.log')
-log.getGames
-log.printGames #Task 2
-log.makeRanking #Task 2
+log.getGames #task 1
+log.printGames #task 2
+log.makeRanking #task 2
+log.deathReport #plus
